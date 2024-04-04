@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feedback-form
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: feedback-form
+  template:
+    metadata:
+      labels:
+        app: feedback-form
+    spec:
+      containers:
+      - name: feedback-form
+        image: avulanagasanjay/front-end
+        ports:
+        - containerPort: 80
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: feedback-form
+spec:
+  selector:
+    app: feedback-form
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
