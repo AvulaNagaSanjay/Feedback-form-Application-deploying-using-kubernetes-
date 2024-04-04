@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: feedback-ingress
+spec:
+  rules:
+    - host: feedback.example.com
+      http:
+        paths:
+          - path: front-end.demo.farmhost.in
+            pathType: Prefix
+            backend:
+              service:
+                name: feedback-service
+                port:
+                  number: 80
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-api-service
+                port:
+                  number: 80
