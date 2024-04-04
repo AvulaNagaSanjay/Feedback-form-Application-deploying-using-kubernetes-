@@ -1,32 +1,42 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: feedback-form
+  name: feedback-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: feedback-form
+      app: feedback
   template:
     metadata:
       labels:
-        app: feedback-form
+        app: feedback
     spec:
       containers:
-      - name: feedback-form
-        image: avulanagasanjay/front-end
+      - name: feedback-container
+        image: nginx:latest
         ports:
         - containerPort: 80
+        volumeMounts:
+        - name: feedback-volume
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: feedback-volume
+        configMap:
+          name: feedback-page-configmap
+
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: feedback-form
+  name: feedback-service
 spec:
   selector:
-    app: feedback-form
+    app: feedback
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
+  type: ClusterIP
+
 
