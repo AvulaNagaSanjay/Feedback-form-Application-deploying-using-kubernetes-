@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: sanjay-farmhost
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: node:14
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DB_USER
+              value: "sanjay"
+            - name: DB_HOST
+              value: "postgresql"
+            - name: DB_NAME
+              value: "feedback"
+            - name: DB_PASSWORD
+              value: "sanjay00"
+            - name: DB_PORT
+              value: "5432"
+          volumeMounts:
+            - name: app-volume
+              mountPath: /usr/src/app
+      volumes:
+        - name: app-volume
+          configMap:
+            name: backend-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: sanjay-farmhost
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: LoadBalancer
